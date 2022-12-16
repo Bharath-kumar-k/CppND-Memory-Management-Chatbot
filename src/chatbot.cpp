@@ -38,12 +38,118 @@ ChatBot::~ChatBot()
     if(_image != NULL) // Attention: wxWidgets used NULL and not nullptr
     {
         delete _image;
-        _image = NULL;
+        _image = NULL;        
     }
 }
 
 //// STUDENT CODE
 ////
+
+// Rule of five
+
+// copy constructor 
+ChatBot::ChatBot(const ChatBot& source){    
+    std::cout << "ChatBot Copy Constructor" << std::endl;
+    if(source._image != NULL){
+        this-> _image = new wxBitmap();
+        *_image = *source._image;
+    }else{
+        this-> _image = NULL ;
+    }
+
+    this->_currentNode = source._currentNode;
+    this->_rootNode = source._rootNode;
+    this->_chatLogic = source._chatLogic;
+    (this->_chatLogic)->SetChatbotHandle(this);
+
+}
+
+// copy = operator 
+ChatBot &ChatBot::operator=(const ChatBot &source){
+    
+    std::cout << "ChatBot Copy Operator" << std::endl;
+
+    if(this == &source){
+        return *this;
+    }
+
+    if(_image != NULL){
+        delete _image;
+    }
+
+    if(source._image != NULL){
+        this-> _image = new wxBitmap();
+        *_image = *source._image;
+    }else{
+        this-> _image = NULL ;
+    }
+
+    this->_currentNode = source._currentNode;
+    this->_rootNode = source._rootNode;
+    this->_chatLogic = source._chatLogic;
+    (this->_chatLogic)->SetChatbotHandle(this);
+
+    return *this;
+
+}
+
+// move constructor 
+ChatBot::ChatBot(ChatBot &&source){
+    std::cout << "ChatBot Move Constructor" << std::endl;    
+
+    if(source._image != NULL){
+        this->_image = new wxBitmap();
+        *_image = *source._image;
+    }else{
+        this->_image = NULL;
+    }
+    // moved source image, so removing removing image from source
+    source._image = NULL;
+
+
+    this->_currentNode = source._currentNode;
+    source._currentNode = nullptr;
+
+    this->_rootNode = source._rootNode;
+    source._rootNode = nullptr;
+
+    this->_chatLogic = source._chatLogic;
+    (this->_chatLogic)->SetChatbotHandle(this);
+    source._chatLogic = nullptr;
+
+}
+
+// move = operator 
+ChatBot &ChatBot::operator=(ChatBot &&source){
+    std::cout << "ChatBot Move Operator" << std::endl;
+    if(this == &source){
+        return *this;
+    }
+    if(_image != NULL){
+        delete this->_image;
+    }
+
+
+    if(source._image != NULL){
+        this->_image = new wxBitmap();
+        *_image = *source._image;
+    }else{
+        this->_image = NULL;
+    }
+    source._image = NULL;
+
+    this->_currentNode = source._currentNode;
+    source._currentNode = nullptr;
+
+    this->_rootNode = source._rootNode;
+    source._rootNode = nullptr;
+
+    this->_chatLogic = source._chatLogic;
+    (this->_chatLogic)->SetChatbotHandle(this);
+    source._chatLogic = nullptr;
+
+    return *this;
+}
 
 ////
 //// EOF STUDENT CODE
